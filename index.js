@@ -1,16 +1,22 @@
 const express =require('express');
 const bodyParser=require('body-parser')
 require('dotenv').config()
+const cors=require('cors')
+
+const authRoutes=require('./routes/authRouters')
 
 const app=express();
-const connect =require('./connection/db')
 
+const connect =require('./connection/db')
 connect(); // function call to connect with database
 
 app.use(bodyParser.json())
-app.use('/',require('./routes/authRouters'))
+app.use(cors())
+
+app.use('/',authRoutes)
 // app.use("/",require('./routes/admin_routers'))
 // app.use("/",require('./routes/website_routers'))
+
 
 
 

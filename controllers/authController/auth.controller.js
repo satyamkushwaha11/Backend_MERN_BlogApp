@@ -65,7 +65,7 @@ const signup = async (req, res) => {
     const { name, email, password } = req.body
     console.log(req.body);
     const schema = Joi.object({
-        name: Joi.string().trim().required().min(3),
+        // name: Joi.string().trim().required().min(3),
         email: Joi.string().email().required().trim(),
         password: Joi.string().required().trim().min(6).max(16),
         role: Joi.string().valid('ADMIN', 'USER').default('USER')
