@@ -9,7 +9,6 @@ const app=express();
 
 const connect =require('./connection/db')
 connect(); // function call to connect with database
-
 app.use(bodyParser.json())
 app.use(cors())
 

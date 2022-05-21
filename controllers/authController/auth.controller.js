@@ -3,8 +3,7 @@ const User = require('../../models/user.model')
 const Joi = require('joi')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-
-const { findOne } = require('../../models/user.model')
+                                                    
 
 
 // for login API
@@ -28,12 +27,14 @@ const login = async (req, res) => {
     try {
         // FINDING USER ACCOUNT
         const user = await User.findOne({ email })
+        console.log(user,'user');
         if (user) {
             const matchingPassword = await bcrypt.compare(password, user.password) //MATCHING THE PASSWORD
             if (matchingPassword) {
                 const token = jwt.sign({ user }, process.env.SECRECT_KEY)       // CREATING JWT TOKEN
                 return res.status(200).json({
                     massage:'login successfully',
+                    ...user["_doc"],
                     token
                 })
             }else{
@@ -80,7 +81,7 @@ const signup = async (req, res) => {
         })
     }
 
-    const payload = validSchema.value
+    let payload = validSchema.value
 
     try {
         // CHECKING USER EXISTIGN OR NOT
@@ -90,7 +91,13 @@ const signup = async (req, res) => {
 
         if (checkUser) {
             return res.status(400).json({ error: [{ msg: 'Email is already exist.' }] })
+
         }
+        //GENERATIG USER NAME
+        const userName=payload.email.split('@')[0]
+        payload={...payload,userName}
+        console.log(payload,'payload');
+
 
         // GENERATE HASH PASSWORD
         const salt = await bcrypt.genSalt(10)
@@ -108,6 +115,7 @@ const signup = async (req, res) => {
 
             return res.status(200).json({
                 massage: ' Your account has been created ',
+                ...createUser["_doc"],
                 token
             })
 
