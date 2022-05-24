@@ -1,8 +1,9 @@
-
 const User = require('../../models/user.model')
 const Joi = require('joi')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+require('dotenv').config()
+
                                                     
 
 
@@ -31,7 +32,7 @@ const login = async (req, res) => {
         if (user) {
             const matchingPassword = await bcrypt.compare(password, user.password) //MATCHING THE PASSWORD
             if (matchingPassword) {
-                const token = jwt.sign({ user }, process.env.SECRECT_KEY)       // CREATING JWT TOKEN
+                const token = jwt.sign({ user }, process.env.SECRETE_KEY)       // CREATING JWT TOKEN
                 return res.status(200).json({
                     massage:'login successfully',
                     ...user["_doc"],
@@ -59,7 +60,6 @@ const login = async (req, res) => {
 
 }
 
-
 // signup or Registeration API
 const signup = async (req, res) => {
     console.log(req.body);
@@ -85,9 +85,9 @@ const signup = async (req, res) => {
 
     try {
         // CHECKING USER EXISTIGN OR NOT
-        console.log('ds');
+        
         const checkUser = await User.findOne({ email })
-        console.log('dssssssssss');
+        
 
         if (checkUser) {
             return res.status(400).json({ error: [{ msg: 'Email is already exist.' }] })
@@ -96,7 +96,7 @@ const signup = async (req, res) => {
         //GENERATIG USER NAME
         const userName=payload.email.split('@')[0]
         payload={...payload,userName}
-        console.log(payload,'payload');
+        // console.log(payload,'payload');
 
 
         // GENERATE HASH PASSWORD
@@ -110,8 +110,9 @@ const signup = async (req, res) => {
                 ...payload,
                 password: hashPassword
             })
+            console.log(createUser,process.env.SECRETE_KEY,'ooooooooooooo');
             // CREATING JWT TOKEN
-            const token = jwt.sign({ user: createUser }, process.env.SECRECT_KEY)
+            const token = jwt.sign({ user: createUser }, process.env.SECRETE_KEY)
 
             return res.status(200).json({
                 massage: ' Your account has been created ',
