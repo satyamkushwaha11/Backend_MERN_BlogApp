@@ -8,6 +8,6 @@ router.get("/getPostById/:id",postControllers.getPostById)
 router.get("/getPostsByUserId/:id",postControllers.getAllPostByUserId)
 router.get("/getAllPosts",postControllers.getAllPosts)
 router.delete("/delete/:id",postControllers.deletePost)
-router.put("/update/:id",AuthGuard,postControllers.editPost)
+router.put("/update/:id",postControllers.editPost)
 
 module.exports=router

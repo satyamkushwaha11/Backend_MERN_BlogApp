@@ -45,11 +45,101 @@ const addPost = async (req, res) => {
   }
 };
 
-const editPost = async (req, res) => {};
+const editPost = async (req, res) => {
+  const {id:postId} = req.params;
 
-const getPostById = async (req, res) => {};
+  const schema = Joi.object({
+    title: Joi.string().optional(),
+    description: Joi.string().optional().allow(null, ""),
+    images: Joi.array().items().optional(),
+    tags: Joi.array().items().optional(),
+  });
 
-const getAllPostByUserId = async (req, res) => {};
+  var validSchema = schema.validate(req.body);
+
+  if (validSchema.error) {
+    return res.status(400).json({
+      message: validSchema.error.message || "Bad Request",
+      status: 400,
+    });
+  }
+  let filter={ _id: postId }
+  let postData = validSchema.value;
+
+  try {
+    // FINDING USER ACCOUNT
+    const post = await Post.findOneAndUpdate(filter,postData);
+    console.log(post, "post");
+    if (post) {
+      // const createPost = await Post.create(postData);
+      // console.log(createPost, "casdafsdfasfsaf");
+      return res.status(201).json({
+        massage: "post updated  successfully",
+        status:201
+      });
+    } else {
+      return res.status(404).json({
+        error: "Post does not exist with this Id",
+        status:404
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      massage: "Internal server error",
+      error,
+    });
+  }
+};
+
+const getPostById = async (req, res) => {
+  const {id}=req.params
+  try {
+    const posts = await Post.findOne({_id:id});
+    console.log(posts, "posts");
+    if(posts){
+      return res.status(200).json({
+        massage: "post access  successfully",
+        posts,
+      });
+    }else{
+      return res.status(404).json({
+        massage: "post with this id is not exist",
+        status:404
+      });
+    }
+  
+  } catch (error) {
+    return res.status(500).json({
+      massage: "Internal server error",
+      error,
+    });
+  }
+};
+
+const getAllPostByUserId = async (req, res) => {
+  const {id}=req.params
+  try {
+    const posts = await Post.find({userId:id});
+    console.log(posts, "posts");
+    if(posts){
+      return res.status(200).json({
+        massage: "posts access  successfully",
+        posts,
+      });
+    }else{
+      return res.status(404).json({
+        massage: "not post avalibale  with this userId is not exist",
+        status:404
+      });
+    }
+  
+  } catch (error) {
+    return res.status(500).json({
+      massage: "Internal server error",
+      error,
+    });
+  }
+};
 
 const getAllPosts = async (req, res) => {
   try {
