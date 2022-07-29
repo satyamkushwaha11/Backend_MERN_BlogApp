@@ -22,6 +22,14 @@ const postSchema = new Schema(
       type: Array,
       required: false,
     },
+    likes:{
+      type:Array,
+      required: false,
+    },
+    comments:{
+      type:Array,
+      required: false,
+    }
   },
   { timestamps: true }
 );

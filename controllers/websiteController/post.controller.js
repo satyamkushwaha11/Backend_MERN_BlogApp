@@ -10,6 +10,8 @@ const addPost = async (req, res) => {
     description: Joi.string().optional().allow(null, ""),
     images: Joi.array().items().optional(),
     tags: Joi.array().items().optional(),
+    likes: Joi.array().items().optional(),
+    comments: Joi.array().items().optional(),
   });
 
   var validSchema = schema.validate(req.body);

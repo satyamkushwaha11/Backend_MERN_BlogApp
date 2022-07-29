@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const URL = process.env.DATABASE_URL;
+const URL = 
+// "mongodb://localhost:27017/BlogApp"
+process.env.DATABASE_URL;
 
 const connect=async()=>{
   try{
